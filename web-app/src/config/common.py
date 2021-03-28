@@ -1,8 +1,6 @@
 import os
-import sentry_sdk
 import sys
 
-from sentry_sdk.integrations.django import DjangoIntegration
 from os.path import join
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,7 +24,6 @@ INSTALLED_APPS = (
     'django_rest_passwordreset',  # for reset password endpoints
     'drf_yasg',  # swagger api
     'easy_thumbnails',  # image lib
-    'social_django',  # social login
     'corsheaders',  # cors handling
     'django_celery_beat',  # task scheduler
     'djmoney',  # money object
@@ -51,7 +48,6 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
 )
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '')
@@ -128,12 +124,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+# ElasticSearch config
+
+ES_HOST = 'localhost'
+ES_PORT = 9200
 
 # Set DEBUG to False as a default for safety
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug

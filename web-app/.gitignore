@@ -110,3 +110,4 @@ venv.bak/
 # media files
 media/*
 !media/.gitkeep
+/elasticsearch-7.12.0

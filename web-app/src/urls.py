@@ -11,6 +11,8 @@ from drf_yasg import openapi
 
 from src.users.urls import usersRouter
 
+from src.artworks.urls import urlpatterns as artworks_urls
+
 schema_view = get_schema_view(
     openapi.Info(title="Pastebin API", default_version='v1'),
     public=True,
@@ -27,6 +29,7 @@ urlpatterns = [
 
     # api
     path('api/v1/', include(router.urls)),
+    path('api/v1/', include(artworks_urls)),
 
     # auth
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

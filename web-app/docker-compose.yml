@@ -25,36 +25,16 @@ services:
     depends_on:
       - db
 
-  queue:
-    build: .
-    restart: unless-stopped
-    env_file: .env
-    command: sh /entrypoint-queue.sh
+  elasticsearch:
+    image: elasticsearch:7.6.1
+    deploy:
+      restart_policy:
+        condition: any
+    environment:
+      discovery.type: single-node
     volumes:
-      - ./.env:/app/src/.env
-      - ./:/app
-
-  beat:
-    build: .
-    restart: unless-stopped
-    env_file: .env
-    command: sh /entrypoint-beat.sh
-    volumes:
-      - ./.env:/app/src/.env
-      - ./:/app
-
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
-    ports:
-      - 6379:6379
-
-  mailhog:
-    image: mailhog/mailhog:latest
-    restart: always
-    ports:
-      - 1025:1025
-      - 8025:8025
+      - elasticsearch-data:/usr/share/elasticsearch/data
 
 volumes:
   db-data:
+  elasticsearch-data:

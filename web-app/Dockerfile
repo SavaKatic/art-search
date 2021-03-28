@@ -1,7 +1,8 @@
 FROM python:3.6
 
 WORKDIR /app
-EXPOSE 80
+
+EXPOSE 8000
 ENV PYTHONUNBUFFERED 1
 
 RUN set -x && \

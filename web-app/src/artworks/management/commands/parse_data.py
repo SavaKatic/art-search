@@ -29,6 +29,7 @@ class Command(BaseCommand):
                     'dates': row['dates']
                 })
                 line_count += 1
+
             print(f'Processed {line_count} lines.')
 
         # Artwork data parsing
@@ -78,6 +79,9 @@ class Command(BaseCommand):
 
                 artist.artworks.add(artwork)
                 line_count += 1
+
+                if line_count == 50:
+                    break
 
 
             print(f'Processed {line_count} lines.')
