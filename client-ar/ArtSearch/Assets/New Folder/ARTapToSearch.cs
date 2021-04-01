@@ -79,8 +79,6 @@ public class ARTapToSearch : MonoBehaviour
         form.AddBinaryData("artwork", m_Texture.EncodeToJPG());
 
         UnityWebRequest request = UnityWebRequest.Post("https://3c7592545eb5.ngrok.io/api/v1/search-artworks/", form);
-        // request.SetRequestHeader("Content-Type", "application/json");
-        // request.SetRequestHeader("Accept", "application/json");
         request.SendWebRequest();
 
         while(!request.isDone)
@@ -94,9 +92,8 @@ public class ARTapToSearch : MonoBehaviour
         }
         else
         {
-            // ArtInfo data = JsonUtility.FromJson<ArtInfo>(request.downloadHandler.text);
-            // Text.text = data.title + " " + data.description;
-            Text.text = "Waves - gelatine silver print on paper 50$";
+            ArtInfo data = JsonUtility.FromJson<ArtInfo>(request.downloadHandler.text);
+            Text.text = data.title + " " + data.description;
         }
 
     }

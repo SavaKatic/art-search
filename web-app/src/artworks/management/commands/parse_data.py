@@ -13,24 +13,24 @@ from src.artworks.models import Artist, Artwork
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Artist data parsing
-        # artist_data_file_path = os.path.join(settings.STATIC_ROOT, 'artist_data.csv')
+        artist_data_file_path = os.path.join(settings.STATIC_ROOT, 'artist_data.csv')
 
-        # with open(artist_data_file_path, encoding="utf8") as csv_file:
-        #     csv_reader = csv.DictReader(csv_file)
-        #     line_count = 0
-        #     for row in csv_reader:
-        #         if line_count == 0:
-        #             print(f'Column names are {", ".join(row)}')
-        #             line_count += 1
-        #         print(f'\t Artist {row["name"]}, Gender: {row["gender"]}, Date: {row["dates"]}.')
+        with open(artist_data_file_path, encoding="utf8") as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    print(f'Column names are {", ".join(row)}')
+                    line_count += 1
+                print(f'\t Artist {row["name"]}, Gender: {row["gender"]}, Date: {row["dates"]}.')
 
-        #         Artist.objects.get_or_create(name=row['name'], defaults={
-        #             'gender': row['gender'],
-        #             'dates': row['dates']
-        #         })
-        #         line_count += 1
+                Artist.objects.get_or_create(name=row['name'], defaults={
+                    'gender': row['gender'],
+                    'dates': row['dates']
+                })
+                line_count += 1
 
-        #     print(f'Processed {line_count} lines.')
+            print(f'Processed {line_count} lines.')
 
         # Artwork data parsing
 
