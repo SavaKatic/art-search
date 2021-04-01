@@ -28,8 +28,8 @@ urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
 
     # api
-    path('api/v1/', include(router.urls)),
     path('api/v1/', include(artworks_urls)),
+    path('api/v1/', include(router.urls)),
 
     # auth
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
