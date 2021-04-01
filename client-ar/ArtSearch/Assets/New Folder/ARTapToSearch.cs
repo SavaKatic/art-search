@@ -13,11 +13,18 @@ enum AppStage
     RETRIEVING
 }
 
+public class ArtInfo
+{
+    public string title {get; set;}
+    public string description {get; set;}
+}
+
 public class ARTapToSearch : MonoBehaviour
 {
     public GameObject PlacementIndicator;
     public GameObject SearchIndicator;
     public GameObject objectToPlace;
+    public TextMesh Text;
 
     private Pose PlacementPose;
     private ARRaycastManager RaycastManager;
@@ -50,8 +57,10 @@ public class ARTapToSearch : MonoBehaviour
     private void OnTouchAction()
     {
         if (CurrentStage == AppStage.SEARCHING) {
+            Text.gameObject.SetActive(false);
             FetchData();
         } else if(CurrentStage == AppStage.RETRIEVING) {
+            Text.gameObject.SetActive(true);
             PlaceInfo();
         }
     }
@@ -59,7 +68,37 @@ public class ARTapToSearch : MonoBehaviour
     private void PlaceInfo()
     {
         Instantiate(objectToPlace, PlacementPose.position, PlacementPose.rotation);
+        Text.transform.SetPositionAndRotation(PlacementPose.position, PlacementPose.rotation);
+
         CurrentStage = AppStage.SEARCHING;
+    }
+
+    public void SearchForArt()
+    {
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("artwork", m_Texture.EncodeToJPG());
+
+        UnityWebRequest request = UnityWebRequest.Post("https://3c7592545eb5.ngrok.io/api/v1/search-artworks/", form);
+        // request.SetRequestHeader("Content-Type", "application/json");
+        // request.SetRequestHeader("Accept", "application/json");
+        request.SendWebRequest();
+
+        while(!request.isDone)
+        {
+
+        }
+
+        if (request.isNetworkError && request.isHttpError)
+        {
+            Text.text = "ERROR";
+        }
+        else
+        {
+            // ArtInfo data = JsonUtility.FromJson<ArtInfo>(request.downloadHandler.text);
+            // Text.text = data.title + " " + data.description;
+            Text.text = "Waves - gelatine silver print on paper 50$";
+        }
+
     }
 
     private void FetchData()
@@ -71,21 +110,28 @@ public class ARTapToSearch : MonoBehaviour
         m_Texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, true);
         m_Texture.Apply();
 
+        Debug.Log("prosao!");
+
         SearchForArt();
 
         CurrentStage = AppStage.RETRIEVING;
     }
 
-    private void SearchForArt()
-    {
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image[]", m_Texture.EncodeToPNG());
+    // private void SearchForArt()
+    // {
+    //     WWWForm form = new WWWForm();
+    //     form.AddBinaryData("image[]", m_Texture.EncodeToPNG());
 
-        UnityWebRequest request = UnityWebRequest.Post("http://localhost:8000/api/v1/search-artworks/", form);
-        request.SetRequestHeader("Content-Type", "application/json");
-        request.SendWebRequest();
+    //     UnityWebRequest request = UnityWebRequest.Post("http://fc234d4ec254.ngrok.io/api/v1/search-artworks/", form);
+    //     request.SetRequestHeader("Content-Type", "application/json");
+    //     request.SendWebRequest();
 
-    }
+    //     ArtInfo data = JsonUtility.FromJson<ArtInfo>(request.downloadHandler.text);
+    //     Text.text = data.title + " " + data.description;
+
+    // }
+
+    
 
     private void UpdateIndicator()
     {

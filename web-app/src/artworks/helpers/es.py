@@ -29,7 +29,7 @@ class ElasticConnector:
                     },
                     "img_vec": {
                         "type": "dense_vector",
-                        "dims": 512
+                        "dims": 256
                     },
                     "artwork_id": {
                         "type": "long"
@@ -42,7 +42,7 @@ class ElasticConnector:
             if not self.connection.indices.exists("artworks"):
                 # Ignore 400 means to ignore "Index Already Exist" error.
                 self.connection.indices.create(
-                    index="artworks", body=index_body  # ignore=[400, 404]
+                    index="artworks", body=index_body
                 )
                 print("Created Index -> artworks")
             else:
@@ -54,6 +54,8 @@ class ElasticConnector:
     def insert_artwork(self, body):
         if not self.connection.indices.exists("artworks"):
             self.create_artwork_index()
+
+        print(len(body['img_vec']))
         # Insert a record into the es index
         self.connection.index(index="artworks", body=body)
 
@@ -62,6 +64,7 @@ class ElasticConnector:
         # Retrieve top_n semantically similar records for the given query vector
         if not self.connection.indices.exists("artworks"):
             return "No records found"
+
         s_body = {
             "query": {
                 "script_score": {
@@ -89,7 +92,7 @@ class ElasticConnector:
                     print("--\nscore: {} \n title: {} \n description: {}\n--".format(hit["_score"], hit["_source"]['title'], hit["_source"]['description']))
                     artwork_ids.append(hit['_source']['artwork_id'])
                     data.append({'title': hit["_source"]['title'], 'description': hit["_source"]['description']})
-        return data
+        return data[0] if len(data) else []
 
 
     def keyword_search(self, query, thresh=1.2, top_n=10):

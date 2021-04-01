@@ -113,6 +113,9 @@ STATICFILES_FINDERS = (
 MEDIA_ROOT = join(os.path.dirname(BASE_DIR), 'media')
 MEDIA_URL = '/media/'
 
+# Model files
+MODELS_ROOT = join(os.path.dirname(BASE_DIR), 'models')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
